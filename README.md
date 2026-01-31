@@ -1,5 +1,7 @@
 # FirstVueProject
 
+I lost the original files and citrix wont work so this is partially a recreation of what was done in class
+
 ## Installation & Running
 
 ```sh
