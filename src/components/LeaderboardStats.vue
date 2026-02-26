@@ -1,30 +1,29 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { computed } from 'vue'
+import { useLeaderboardStore } from '@/stores/leaderboardStore'
 
-const totalPlayers = ref(0)
-const averageScore = ref(0)
-const lastUpdated = ref('')
+const leaderboardStore = useLeaderboardStore()
 
-onMounted(() => {
-  totalPlayers.value = 1234
-  averageScore.value = 5678
-  lastUpdated.value = new Date().toLocaleString()
-})
+const lastUpdatedFormatted = computed(() =>
+  leaderboardStore.lastUpdated
+    ? leaderboardStore.lastUpdated.toLocaleString()
+    : 'Never'
+)
 </script>
 
 <template>
   <div class="leaderboard-stats">
     <div class="stat">
-      <span class="label">Total Players:</span>
-      <span class="value">{{ totalPlayers }}</span>
+      <span class="label">Total Players</span>
+      <span class="value">{{ leaderboardStore.totalPlayers.toLocaleString() }}</span>
     </div>
     <div class="stat">
-      <span class="label">Average Score:</span>
-      <span class="value">{{ averageScore }}</span>
+      <span class="label">Average Score</span>
+      <span class="value">{{ leaderboardStore.averageScore.toLocaleString() }}</span>
     </div>
     <div class="stat">
-      <span class="label">Last Updated:</span>
-      <span class="value">{{ lastUpdated }}</span>
+      <span class="label">Last Updated</span>
+      <span class="value">{{ lastUpdatedFormatted }}</span>
     </div>
   </div>
 </template>
@@ -37,6 +36,7 @@ onMounted(() => {
   background-color: #f9f9f9;
   border-radius: 4px;
   margin-top: 1rem;
+  flex-wrap: wrap;
 }
 
 .stat {

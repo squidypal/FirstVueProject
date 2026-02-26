@@ -1,22 +1,39 @@
 # FirstVueProject
 
-I lost the original files and citrix wont work so this is partially a recreation of what was done in class
+Full-stack Vue 3 app — MySQL leaderboard, MongoDB user/contact storage, Pinia state management.
 
-## Installation & Running
+## Setup
+
+**Requirements:** Node.js ≥ 20, MySQL, MongoDB
 
 ```sh
-npm install
-npm run dev
+# 1. Database
+mysql -u root -p < backend/schema.sql
+
+# 2. Backend  (http://localhost:3000)
+cd backend && cp .env.example .env   # fill in DB credentials
+npm install && npm start
+
+# 3. Frontend  (http://localhost:5173)
+cd .. && npm install && npm run dev
 ```
 
-Build for production:
-```sh
-npm run build
-```
+## API Endpoints
 
-## Known Issues
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/leaderboard` | All entries, sorted by score desc |
+| `POST` | `/api/leaderboard` | Add/update score — body: `{ player_name, score, email? }` |
+| `POST` | `/api/contact` | Save inquiry — body: `{ name, email, message }` |
+| `GET` | `/api/login?email=&name=` | Find or auto-create user by email |
 
-- **ContactForm**: Only logs to console, doesn't actually send data anywhere
-- **Counter store**: Defined but not used in any component
-- **LeaderboardTable**: Uses random scores instead of real data (intentional mock)
-- **LeaderboardStats**: Has hardcoded values (1234, 5678)
+## Pinia Stores
+
+- **`userStore`** — current user (`name`, `email`, `role`); actions: `login()`, `logout()`. Used by NavBar, HomeView, ContactForm.
+- **`leaderboardStore`** — MySQL entries + computed `totalPlayers`, `averageScore`; actions: `fetchLeaderboard()`, `submitScore()`. Used by LeaderboardTable, LeaderboardStats.
+
+## Known Limitations
+
+- Session is not persisted — user info resets on page refresh
+- Score deduplication requires an `email`; nameless duplicates create separate rows
+- All users default to the `player` role; no admin UI
